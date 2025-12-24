@@ -116,6 +116,11 @@ def analyze():
         "disclaimer": "Educational purpose only. Consult a dermatologist."
     })
 
+@app.route("/healthz")
+def healthz():
+    return "OK", 200
+
+
 # ===============================
 # RUN SERVER
 # ===============================
