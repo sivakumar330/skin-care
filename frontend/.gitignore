@@ -1,0 +1,10 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# ML models & data
+backend/dataset/
+*.h5
+*.pkl
+*.npy
