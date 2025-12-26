@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Derm AI – Skin Disease Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* ===== ANALYZER SECTION ===== */
+      section {
+        padding: 50px 40px;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: 28px;
+        color: #6a4df4;
+        margin-bottom: 40px;
+      }
+
+      .analyzer-box {
+        max-width: 1500px;
+        margin:-10px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 18px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: 1.5fr 2fr;
+        gap: 20px;
+        justify-self: center;
+      }
+
+      /* Upload Card */
+      .upload-card {
+        border: 2px dashed #bdb5ff;
+        border-radius: 15px;
+        padding: 50px;
+        text-align: center;
+      }
+
+      .upload-card input {
+        display: none;
+      }
+
+      .upload-card label {
+        cursor: pointer;
+      }
+
+      .upload-card img {
+        width: 100%;
+        max-height: 720px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-top: 10px;
+        display: none;
+      }
+
+      /* Result Card */
+      .result-card {
+        background: linear-gradient(135deg, #6a4df4, #4f7df7);
+        border-radius: 15px;
+        padding: 10px;
+        color: #fff;
+        
+      }
+
+      .result-card h3 {
+        margin-top: 0;
+        text-align: center;
+      }
+
+      .result-card .item {
+        margin-bottom: 10px;
+      }
+
+      /* Analyze Button */
+      .analyze-btn {
+        margin-top: 20px;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 25px;
+        background: #6a4df4;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .analyze-btn:hover {
+        background: #5840e0;
+      }
+
+      /* ===== FOOTER ===== */
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 800px) {
+        .hero-content,
+          .analyzer-box {
+          grid-template-columns:1fr ;
+          
+        }
+        #result{
+          font-size:12px;
+        }
+  
+      }
+   
+
+      .analyzer-box {
+        min-height: 520px;
+        margin: -30px;
+        align-items: stretch;
+        
+      }
+
+      .upload-card,
+      .result-card {
+        min-height: 460px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      /* ===== RESULT CONTAINER ===== */
+      .result-card #result {
+        position: relative;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      /* 🔥 SHOW animation ONLY when empty */
+      .result-card #result:empty::before {
+        content: "";
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.9),
+          rgba(255, 255, 255, 0.15),
+          transparent 70%
+        );
+        animation: orbPulse 2.4s infinite ease-in-out;
+      }
+
+      /* Rotating hologram ring */
+      .result-card #result:empty::after {
+        content: "";
+        position: absolute;
+        width: 190px;
+        height: 190px;
+        border-radius: 50%;
+        border: 2px dashed rgba(255, 255, 255, 0.6);
+        animation: rotateRing 6s linear infinite;
+      }
+
+      /* Idle text */
+      .result-card #result:empty::content {
+        display: none;
+      }
+
+      /* ================= NAVBAR RESPONSIVE FIX ================= */
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 9999;
+        background: #fff;
+      }
+
+      /* Desktop default */
+      .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      /* Menu toggle button */
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 26px;
+        cursor: pointer;
+      }
+
+      /* ---------- MOBILE VIEW ---------- */
+      @media (max-width: 1168px) {
+        .menu-toggle {
+          display: block;
+        }
+
+        .nav-menu {
+          position: absolute;
+          top: 70px;
+          left: 0;
+          width: 100%;
+          background: #ffffff;
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 15px 20px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+          /* hidden by default */
+          display: none;
+        }
+
+        .nav-menu.show {
+          display: flex;
+        }
+
+        .nav-link {
+          width: 100%;
+          padding: 12px 0;
+          border-bottom: 1px solid #eee;
+        }
+
+        .btn-premium {
+          margin-top: 10px;
+          width: 100%;
+          text-align: center;
+        }
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="container nav-container">
+        <!-- LOGO -->
+        <a href="#" class="logo">
+          <i class="fa-brands fa-algolia fa-2xs" style="color: #B197FC; font-size:30px;"></i>Derm<span>AI</span>
+        </a>
+
+        <!-- MENU -->
+        <div class="nav-menu" id="navMenu">
+          <a href="#home" class="nav-link active"
+            ><i class="fas fa-home"></i> Home</a
+          >
+          <a href="#analyzer" class="nav-link"
+            ><i class="fas fa-search"></i> Analyze</a
+          >
+          <a href="#diseases" class="nav-link"
+            ><i class="fas fa-disease"></i> Diseases</a
+          >
+          <a href="#about" class="nav-link"
+            ><i class="fas fa-info-circle"></i> About</a
+          >
+          <a href="#contact" class="nav-link"
+            ><i class="fas fa-envelope"></i> Contact</a
+          >
+
+          <!-- LOGIN -->
+          <a href="login.html" class="nav-link btn-premium" id="loginBtn">
+            <i class="fas fa-user"></i> Login
+          </a>
+
+          <!-- USER -->
+          <a class="nav-link btn-premium" id="userBtn" style="display: none">
+            <i class="fas fa-user-circle"></i>
+            <span id="userName"></span>
+          </a>
+
+          <!-- LOGOUT -->
+          <a
+            class="nav-link btn-premium"
+            id="logoutBtn"
+            style="display: none"
+            onclick="logout()"
+          >
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </div>
+
+        <!-- ☰ MOBILE BUTTON -->
+        <button class="menu-toggle" onclick="toggleMenu()">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="animate__animated animate__fadeInDown">
+            <span>AI Powered</span> Skin Disease Detection
+          </h1>
+          <p class="animate__animated animate__fadeInUp animate__delay-1s">
+            Upload an image and get instant analysis of 100+ skin conditions
+            with 95% accuracy
+          </p>
+          <div
+            class="hero-btns animate__animated animate__zoomIn animate__delay-2s"
+          >
+            <a href="#analyzer" class="btn-primary">
+              <i class="fas fa-camera"></i> Start Analysis
+            </a>
+            <a href="#diseases" class="btn-secondary">
+              <i class="fas fa-book-medical"></i> Learn More
+            </a>
+          </div>
+        </div>
+        <div class="hero-image">
+          <div class="floating-elements">
+            <div class="floating-item item1"><i class="fas fa-virus"></i></div>
+            <div class="floating-item item2">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <div class="floating-item item3">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANALYZER -->
+    <section id="analyzer">
+      <h2 class="section-title">AI Skin Analysis</h2>
+
+      <div class="analyzer-box">
+        <!-- Upload -->
+        <div class="upload-card">
+          <label for="img">
+            <h3>Upload Skin Image</h3>
+            <p>JPG / PNG / WEBP</p>
+            <input type="file" id="img" onchange="preview()" />
+          </label>
+          <img
+            id="previewImg"
+            style="
+              width: 100%;
+              max-height: 220px;
+              object-fit: cover;
+              border-radius: 12px;
+              margin-top: 15px;
+              display: none;
+            "
+          />
+          <button class="analyze-btn" onclick="analyze()">Analyze</button>
+        </div>
+
+        <!-- Result -->
+        <div class="result-card">
+          <h3>Analysis Result</h3>
+          <div id="result">
+            <p>Upload image to start analysis...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Diseases Library -->
+    <section id="diseases" class="diseases-section">
+      <div class="container">
+        <h2 class="section-title">Skin Diseases Database</h2>
+        <div class="search-box">
+          <input
+            type="text"
+            id="diseaseSearch"
+            placeholder="Search 100+ skin conditions..."
+          />
+          <i class="fas fa-search"></i>
+        </div>
+
+        <div class="disease-categories">
+          <button class="category-btn active" data-category="all">All</button>
+          <button class="category-btn" data-category="common">Common</button>
+          <button class="category-btn" data-category="infectious">
+            Infectious
+          </button>
+          <button class="category-btn" data-category="chronic">Chronic</button>
+          <button class="category-btn" data-category="cancer">Cancer</button>
+          <button class="category-btn" data-category="allergy">Allergy</button>
+        </div>
+
+        <div class="diseases-grid" id="diseasesGrid">
+          <!-- Diseases will be loaded here -->
+        </div>
+
+        <div class="load-more">
+          <button class="btn-secondary" id="loadMoreBtn">
+            <i class="fas fa-plus"></i> Load More Diseases
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <div class="container">
+        <h2 class="section-title">How Our AI Works</h2>
+        <div class="about-content">
+          <div class="about-item">
+            <div class="about-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h3>Deep Learning Model</h3>
+            <p>Trained on 100,000+ dermatology images using CNN architecture</p>
+          </div>
+          <div class="about-item">
+            <div class="about-icon">
+              <i class="fas fa-bullseye"></i>
+            </div>
+            <h3>95% Accuracy</h3>
+            <p>Clinical-grade accuracy for early detection</p>
+          </div>
+          <div class="about-item">
+            <div class="about-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Privacy Protected</h3>
+            <p>Your images are encrypted and never stored</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+      <div class="container">
+        <h2 class="section-title">Contact Dermatologists</h2>
+        <div class="contact-container">
+          <div class="contact-form">
+            <h3>Send Message</h3>
+            <form id="contactForm">
+              <input type="text" placeholder="Your Name" required />
+              <input type="email" placeholder="Your Email" required />
+              <textarea placeholder="Your Message" rows="5" required></textarea>
+              <button type="submit" class="btn-primary">
+                <i class="fas fa-paper-plane"></i> Send Message
+              </button>
+            </form>
+          </div>
+          <div class="contact-info">
+            <h3><i class="fas fa-headset"></i> 24/7 Support</h3>
+            <div class="info-item">
+              <i class="fas fa-envelope"></i>
+              <span>support@dermai.com</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-phone"></i>
+              <span>+1-800-DERM-AI</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Global Dermatology Network</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h3><i class="fa-brands fa-algolia fa-2xs" style="color: #B197FC; font-size:30px;"></i>Derm<span>AI</span></h3>
+            <p>Advanced AI-powered skin disease detection platform</p>
+          </div>
+          <div class="footer-section">
+            <h4>Quick Links</h4>
+            <a href="#home">Home</a>
+            <a href="#analyze">Analyze</a>
+            <a href="#diseases">Diseases</a>
+            <a href="#about">About AI</a>
+          </div>
+          <div class="footer-section">
+            <h4>Legal</h4>
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+            <a href="#disclaimer">Medical Disclaimer</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>
+            &copy; 2024 DermAI. All rights reserved. This tool is for
+            informational purposes only.
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+      /* ===============================
+   API CONFIG
+=============================== */
+      const API_URL = "https://skin-care-6ujf.onrender.com/analyze";
+
+      /* ===============================
+   GLOBAL ELEMENTS
+=============================== */
+      const imgInput = document.getElementById("img");
+      const previewImg = document.getElementById("previewImg");
+      const result = document.getElementById("result");
+
+      /* ===============================
+   CANCER LIST (AUTO DECISION)
+=============================== */
+      const CANCER_LIST = [
+        "Melanoma",
+        "Basal Cell Carcinoma",
+        "Squamous Cell Carcinoma",
+      ];
+
+      /* ===============================
+   IMAGE PREVIEW
+=============================== */
+      function preview() {
+        const file = imgInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewImg.src = e.target.result;
+          previewImg.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+
+      /* ===============================
+   ANALYZE IMAGE
+=============================== */
+      async function analyze() {
+        const file = imgInput.files[0];
+        if (!file) {
+          alert("Upload image");
+          return;
+        }
+
+        // Loading UI
+        result.innerHTML = `
+    <div class="ai-report">
+      <div class="report-line report-title">
+        AI Diagnostic Console
+      </div>
+      <div class="report-line">
+        Initializing system<span class="cursor"></span>
+      </div>
+    </div>
+  `;
+
+        const fd = new FormData();
+        fd.append("image", file);
+
+        try {
+          // 🔥 ONLY REAL FIX IS HERE (API_URL)
+          const res = await fetch(API_URL, {
+            method: "POST",
+            body: fd,
+          });
+
+          if (!res.ok) {
+            throw new Error("Server error");
+          }
+
+          const data = await res.json();
+          showReport(data);
+        } catch (err) {
+          console.error(err);
+          result.innerHTML = "❌ Diagnostic engine offline";
+        }
+      }
+
+      /* ===============================
+   SHOW REPORT (FINAL OUTPUT)
+=============================== */
+      function showReport(data) {
+        const conditionType = CANCER_LIST.includes(data.disease)
+          ? "Skin Cancer"
+          : "Skin Disease";
+
+        const conditionColor =
+          conditionType === "Skin Cancer" ? "#ef4444" : "#22c55e";
+
+        result.innerHTML = `
+    <div class="ai-report">
+
+      <div class="report-line report-title" style="animation-delay:.1s">
+        Medical AI Diagnostic Report
+      </div>
+
+      <div class="report-line" style="animation-delay:.3s">
+        > Image Analysis: COMPLETED
+      </div>
+
+      <div class="report-line" style="animation-delay:.5s">
+        > Detected Condition: <b>${data.disease}</b>
+      </div>
+
+      <div class="report-line" style="animation-delay:.6s">
+        > Condition Type:
+        <span style="color:${conditionColor}; font-weight:bold">
+          ${conditionType}
+        </span>
+      </div>
+
+      <div class="report-line" style="animation-delay:.7s">
+        > Confidence Score: ${data.confidence}%
+      </div>
+
+      <div class="report-line" style="animation-delay:.9s">
+        > Severity Level:
+        <span class="status ${data.severity}">
+          ${data.severity}
+        </span>
+      </div>
+
+      <div class="report-box report-line" style="animation-delay:1.2s">
+        <b>Doctor Required:</b> ${data.doctor}<br><br>
+        <b>Suggested Medication:</b>
+        ${data.medicine.join(", ")}
+      </div>
+
+      <div class="report-box report-line" style="animation-delay:1.5s">
+        <b>Precautions:</b>
+        <ul>
+          ${data.precautions.map((p) => `<li>${p}</li>`).join("")}
+        </ul>
+      </div>
+
+      <div class="report-line" style="animation-delay:1.8s">
+        Status: Report Generated Successfully
+      </div>
+
+      <small class="report-line" style="animation-delay:2s">
+        ${data.disclaimer}
+      </small>
+
+    </div>
+  `;
+      }
+
+      function toggleMenu() {
+        const menu = document.getElementById("navMenu");
+        menu.classList.toggle("show");
+      }
+
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const name = this.querySelector('input[type="text"]').value;
+          const email = this.querySelector('input[type="email"]').value;
+          const message = this.querySelector("textarea").value;
+
+          emailjs
+            .send("service_kod0pra", "template_6otbh8y", {
+              name: name,
+              email: email,
+              message: message,
+            })
+            .then(() => {
+              alert("Message sent successfully!");
+              this.reset();
+            })
+            .catch((error) => {
+              alert("Failed to send message");
+              console.error(error);
+            });
+        });
+
+      (function () {
+        emailjs.init("C08gslK88_7fwjoAT"); // 🔑 replace
+      })();
+    </script>
+    <script type="module" src="auth.js"></script>
+
+    <script src="script.js"></script>
+  </body>
+</html>

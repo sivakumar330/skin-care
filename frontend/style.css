@@ -6,9 +6,9 @@
 }
 
 :root {
-  --primary: #0c2b60;          /* Deep Blue */
-  --secondary: #100c51;        /* Sky Blue */
-  --accent: #ff8f00;           /* Amber */
+  --primary: #0c2b60; /* Deep Blue */
+  --secondary: #100c51; /* Sky Blue */
+  --accent: #ff8f00; /* Amber */
   --success: #2e7d32;
   --warning: #fbc02d;
   --danger: #c62828;
@@ -19,9 +19,6 @@
   --shadow: 0 15px 40px rgba(21, 101, 192, 0.25);
   --transition: all 0.3s ease;
 }
-
-
-
 
 body {
   font-family: "Poppins", sans-serif;
@@ -144,7 +141,7 @@ body {
   color: rgb(233, 224, 224);
   position: relative;
   overflow: hidden;
-  margin-top: 70px;
+  margin-top: -10px;
 }
 
 .hero .container {
@@ -595,7 +592,6 @@ body {
   font-size: 60px;
 }
 
-
 .disease-badge {
   position: absolute;
   top: 15px;
@@ -864,7 +860,7 @@ body {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1168px) {
   .nav-menu {
     display: none;
     position: absolute;
@@ -888,7 +884,7 @@ body {
 
   .hero {
     padding: 150px 0 80px;
-    margin-top: 60px;
+    margin-top: -10px;
   }
 
   .hero-content h1 {
@@ -952,19 +948,6 @@ body {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ===== AI MEDICAL REPORT ===== */
 .ai-report {
   background: #0f172a;
@@ -976,8 +959,14 @@ body {
 }
 
 @keyframes reportIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .report-line {
@@ -987,7 +976,9 @@ body {
 }
 
 @keyframes lineIn {
-  to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
 
 .report-title {
@@ -1000,9 +991,15 @@ body {
   font-weight: bold;
 }
 
-.status.High { color:#22c55e; }
-.status.Medium { color: #f59e0b; }
-.status.Low { color: #ef4444; }
+.status.High {
+  color: #22c55e;
+}
+.status.Medium {
+  color: #f59e0b;
+}
+.status.Low {
+  color: #ef4444;
+}
 
 .report-box {
   background: #020617;
@@ -1020,12 +1017,13 @@ body {
 }
 
 @keyframes blink {
-  50% { opacity: 0; }
+  50% {
+    opacity: 0;
+  }
 }
 .report-box ul li {
-  margin-left:15px ;
+  margin-left: 15px;
 }
-
 
 .disease-image {
   height: 200px;

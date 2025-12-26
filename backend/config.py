@@ -19,6 +19,8 @@ CLASSES = [
     "Eczema",
     "Scabies",
     "Lichen Planus",
+    "Basal Cell Carcinoma",
+    "Squamous Cell Carcinoma",
     "Normal"
 ]
 
